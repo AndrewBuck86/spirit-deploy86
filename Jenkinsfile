@@ -1,63 +1,34 @@
 pipeline {
     agent any
 
-    // Define el ID de tu proyecto de GCP y el repositorio de Artifact Registry
-    // Estos valores se obtienen de tu archivo main.tf
-    // project = "spirit-deploy86", repository_id = "imagenes-proyecto"
-    environment {
-        PYTHON_VERSION = '3.11'
-        // Variables para GCP basadas en main.tf
-        GCP_PROJECT_ID = 'spirit-deploy86'
-        GCP_REPOSITORY = 'imagenes-proyecto'
-    }
-
     stages {
-        stage('1. Clonando el código') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('2. Instalando Dependencias') {
+        stage('Setup Python and Dependencies') {
             steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt pytest flake8
-                '''
+                sh 'python3.11 -m ensurepip --upgrade'
+                sh 'python3.11 -m pip install uv'
+                sh 'uv venv'
+                sh '. .venv/bin/activate && uv pip install -e .[dev]'
             }
         }
-
-        stage('3. Linter (Flake8)') {
+        stage('Run Ruff Checks') {
             steps {
-                sh '''
-                    . venv/bin/activate
-                    # Combinamos las reglas de flake8 y eliminamos --exit-zero para que la etapa falle si hay errores.
-                    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --max-complexity=10 --max-line-length=127
-                '''
+                sh '. .venv/bin/activate && uv run ruff check .'
             }
         }
-
-        stage('4. Pruebas Unitarias (Pytest)') {
+        stage('Run Pyright Checks') {
             steps {
-                sh '''
-                    . venv/bin/activate
-                    pytest
-                '''
+                sh '. .venv/bin/activate && uv run pyright'
             }
         }
-    }
-    post {
-        always {
-            echo 'Limpiando el entorno...'
-            deleteDir()
-        }
-        success {
-            echo 'Pipeline completado exitosamente.'
-        }
-        failure {
-            echo 'Pipeline falló. Revisa los logs.'
+        stage('Run Tests') {
+            steps {
+                sh '. .venv/bin/activate && uv run python3 -m unittest discover'
+            }
         }
     }
 }
