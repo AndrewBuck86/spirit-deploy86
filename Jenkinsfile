@@ -1,8 +1,14 @@
 pipeline {
     agent any
 
+    // Define el ID de tu proyecto de GCP y el repositorio de Artifact Registry
+    // Estos valores se obtienen de tu archivo main.tf
+    // project = "spirit-deploy86", repository_id = "imagenes-proyecto"
     environment {
         PYTHON_VERSION = '3.11'
+        // Variables para GCP basadas en main.tf
+        GCP_PROJECT_ID = 'spirit-deploy86'
+        GCP_REPOSITORY = 'imagenes-proyecto'
     }
 
     stages {
@@ -23,14 +29,35 @@ pipeline {
             }
         }
 
-        stage('3. Corriendo Pruebas y Linter') {
+        stage('3. Linter (Flake8)') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    # Combinamos las reglas de flake8 y eliminamos --exit-zero para que la etapa falle si hay errores.
+                    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --max-complexity=10 --max-line-length=127
+                '''
+            }
+        }
+
+        stage('4. Pruebas Unitarias (Pytest)') {
             steps {
                 sh '''
                     . venv/bin/activate
                     pytest
-                    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                 '''
             }
+        }
+    }
+    post {
+        always {
+            echo 'Limpiando el entorno...'
+            deleteDir()
+        }
+        success {
+            echo 'Pipeline completado exitosamente.'
+        }
+        failure {
+            echo 'Pipeline falló. Revisa los logs.'
         }
     }
 }
