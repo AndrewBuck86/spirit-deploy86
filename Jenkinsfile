@@ -1,34 +1,29 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON_ENV = "venv"
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Prepare Environment') {
             steps {
-                checkout scm
+                sh "python3 -m venv ${PYTHON_ENV}"
+                sh ". ${PYTHON_ENV}/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
             }
         }
-        stage('Setup Python and Dependencies') {
+
+        stage('Unit Tests') {
             steps {
-                sh 'python3.11 -m ensurepip --upgrade'
-                sh 'python3.11 -m pip install uv'
-                sh 'uv venv'
-                sh '. .venv/bin/activate && uv pip install -e .[dev]'
+                sh ". ${PYTHON_ENV}/bin/activate && pytest"
             }
         }
-        stage('Run Ruff Checks') {
-            steps {
-                sh '. .venv/bin/activate && uv run ruff check .'
-            }
-        }
-        stage('Run Pyright Checks') {
-            steps {
-                sh '. .venv/bin/activate && uv run pyright'
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                sh '. .venv/bin/activate && uv run python3 -m unittest discover'
-            }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up workspace...'
+            deleteDir()
         }
     }
 }

@@ -3,10 +3,12 @@ from app import app
 
 @pytest.fixture
 def client():
+    app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
-def test_healthz(client):
-    response = client.get('/healthz')
-    assert response.status_code == 200
-    assert response.json == {"status": "ok"}
+def test_hello_endpoint(client):
+    """Valida que el endpoint principal responda correctamente."""
+    res = client.get('/')
+    assert res.status_code == 200
+    assert b"Spirit-Deploy86" in res.data

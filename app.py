@@ -4,11 +4,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return jsonify({"message": "¡Hola desde Spirit-Deploy86!", "proyecto": "virtuosismo"})
+    return jsonify({"message": "Spirit-Deploy86 is flying! 🕊️"})
 
 @app.route('/healthz')
 def healthz():
-    return jsonify({"status": "ok"}), 200
+    return "OK", 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
