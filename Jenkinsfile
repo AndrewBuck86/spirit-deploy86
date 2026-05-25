@@ -6,6 +6,17 @@ pipeline {
     }
 
     stages {
+        stage('Debug Environment') {
+            steps {
+                sh '''
+                    echo "--- DIAGNÓSTICO ---"
+                    [ -f /.dockerenv ] && echo "Entorno: DOCKER" || echo "Entorno: HOST"
+                    echo "PATH: $PATH"
+                    which python3 || echo "python3: NOT FOUND"
+                    python3 --version || echo "python3: ERROR AL OBTENER VERSIÓN"
+                '''
+            }
+        }
         stage('Prepare Environment') {
             steps {
                 sh "python3 -m venv ${PYTHON_ENV}"
