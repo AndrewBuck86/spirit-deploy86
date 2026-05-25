@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON_ENV = "venv"
-    }
-
     stages {
         stage('Environment & Tests') {
             steps {
