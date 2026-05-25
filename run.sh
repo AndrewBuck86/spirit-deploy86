@@ -43,6 +43,17 @@ uv pip install -r requirements.txt
 if [ "$1" == "test" ]; then
     echo "Running tests with pytest..."
     ./.venv/bin/pytest
+elif [ "$1" == "plan" ]; then
+    echo "Ejecutando Terraform Plan..."
+    terraform init
+    terraform plan
+elif [ "$1" == "apply" ]; then
+    echo "Ejecutando Terraform Apply..."
+    terraform apply -auto-approve
+elif [ "$1" == "destroy" ]; then
+    echo "Borrando toda la infraestructura para ahorrar dinero..."
+    terraform init
+    terraform destroy -auto-approve
 else
     # Default behavior: Start the server
     echo "Starting Vertex AI server..."
