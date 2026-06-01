@@ -34,6 +34,12 @@ Implementación de un proceso de promoción a producción que incluye un Job man
 
 ---
 
+## 🤝 Flujo de Trabajo
+Este proyecto sigue el modelo de **Branching por Funcionalidad**. Ningún cambio llega a `main` sin pasar por un **Pull Request (PR)**, donde se ejecutan:
+1. Validaciones de CI (Linter + Test).
+2. Escaneo de seguridad (Trivy).
+3. Aprobación manual para despliegue a Producción.
+
 ## 🛠️ Guía de Uso Local
 
 Para los desarrolladores que deseen replicar el entorno de pruebas:

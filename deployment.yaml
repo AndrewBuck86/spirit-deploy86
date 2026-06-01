@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spirit-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spirit-app
+  template:
+    metadata:
+      labels:
+        app: spirit-app
+    spec:
+      containers:
+      - name: spirit-app
+        image: us-central1-docker.pkg.dev/spirit-deploy86/repo/app:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spirit-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: spirit-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
