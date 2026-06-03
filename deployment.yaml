@@ -15,6 +15,25 @@ spec:
       containers:
       - name: spirit-app
         image: us-central1-docker.pkg.dev/spirit-deploy86/repo/app:latest
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
         ports:
         - containerPort: 8080
 ---
