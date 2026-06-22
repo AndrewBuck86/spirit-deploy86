@@ -1,0 +1,24 @@
+name: Security Scan (Phase 5)
+on: [push, pull_request]
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🛠️ Build local image
+        run: docker build -t my-app:${{ github.sha }} .
+
+      - name: 🛡️ Escaneo de Seguridad (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'my-app:${{ github.sha }}'
+          format: 'table' # Mantiene la tabla en los logs
+          exit-code: '1' # SI ENCUENTRA CRÍTICOS, PONE EL PIPELINE EN ROJO
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'
+          hide-progress: false
+          output: 'trivy-results.txt' # Guardamos para documentar si hace falta
