@@ -44,33 +44,3 @@ Esta hoja de ruta está diseñada para convertirte en un experto en Pipelines, e
   3. Usar `kubectl describe pod` y `logs` para detectar la causa.
   4. Aplicar `kubectl rollout undo` (Rollback) para salvar la situación.
 
-### Fase 7: Observabilidad
-- **Objetivo:** Ver lo que pasa por dentro de la app Python.
-- **Acciones:**
-  1. App Python usa `logging` en JSON (`severity`, `status`).
-  2. Expone `/metrics` con `prometheus_client`.
-  3. Configurar dashboard básico para ver peticiones y latencia.
-
-### Fase 8: Alertas por logs
-- **Objetivo:** Que el clúster te avise cuando algo se rompe.
-- **Acciones:**
-  1. Política en Cloud Logging: filtro `severity>=ERROR` y `status>=500`.
-  2. Si ocurre 5 veces en 10 min, dispara una alerta (simulada por email o en consola).
-
-### Fase 9: Cierre en PR
-- **Objetivo:** Dejar todo documentado como un profesional.
-- **Acciones:**
-  1. El Workflow comenta en el PR de GitHub: "Deploy dev OK, prod a la espera".
-  2. Documentar el Postmortem del error de la Fase 6 en el README (causa, fix, acción preventiva).
-
-### Fase 10: Pipeline Robusto y Automatizado (El Gran Final)
-- **Objetivo:** Unir todas las piezas.
-- **Acciones:**
-  1. Tienes un pipeline completo: CI → Guardias (Trivy) → CD Dev → Aprobación → Prod.
-  2. Todo versionado, con rollback documentado y alertas activas.
-
----
-**Comando de inicialización de proyecto:**
-```bash
-gcloud config set project spirit-deploy86
-```
