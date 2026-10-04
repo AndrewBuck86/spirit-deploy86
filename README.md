@@ -56,3 +56,7 @@ Para los desarrolladores que deseen replicar el entorno de pruebas:
 
 ---
 *Este repositorio es una muestra técnica de integración de herramientas Cloud Native, enfocada en la eficiencia operativa y la seguridad.*
+
+## Estado del proyecto
+- **Última revisión:** Octubre 2026
+- **Estado:** Mantenimiento y verificación de dependencias al día.
