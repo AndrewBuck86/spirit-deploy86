@@ -3,6 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
+    paths-ignore:
+      - '**.md'
       - main
 
 env:
