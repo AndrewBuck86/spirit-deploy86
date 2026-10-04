@@ -60,3 +60,5 @@ Para los desarrolladores que deseen replicar el entorno de pruebas:
 ## Estado del proyecto
 - **Última revisión:** Octubre 2026
 - **Estado:** Mantenimiento y verificación de dependencias al día.
+
+<!-- verificacion CI/CD OK -->
